@@ -8,7 +8,7 @@ huggingface_token = os.environ.get("HUGGINGFACE_TOKEN")
 
 notLoaded = True
 
-model_id = "runwayml/stable-diffusion-v1-5"
+model_id = "CompVis/stable-diffusion-v1-4"
 pipe = StableDiffusionPipeline.from_pretrained(model_id, low_cpu_mem_usage=True, use_auth_token=huggingface_token)
 pipe = pipe.to("cpu")
 def dummy(images, **kwargs):
