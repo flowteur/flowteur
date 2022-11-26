@@ -1,0 +1,5 @@
+flask
+flask-restx
+black
+transformers==4.21.0
+huggingface-hub
