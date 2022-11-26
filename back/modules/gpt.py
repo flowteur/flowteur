@@ -1,12 +1,8 @@
 import os
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 from huggingface_hub import HfApi
-from huggingface_hub.commands.user import _login
 # get env var for token
 huggingface_token = os.environ.get("HUGGINGFACE_TOKEN")
-
-_login(HfApi(), token=huggingface_token)
-
 
 notLoaded = True
 
@@ -15,8 +11,8 @@ def load():
     global tokenizer
     global model
     if notLoaded:
-        tokenizer = GPT2Tokenizer.from_pretrained("sberbank-ai/mGPT")
-        model = GPT2LMHeadModel.from_pretrained("sberbank-ai/mGPT")
+        tokenizer = GPT2Tokenizer.from_pretrained("sberbank-ai/mGPT", use_auth_token=huggingface_token)
+        model = GPT2LMHeadModel.from_pretrained("sberbank-ai/mGPT", use_auth_token=huggingface_token)
 
         notLoaded = False
         return tokenizer, model   

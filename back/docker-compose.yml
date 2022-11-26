@@ -1,0 +1,14 @@
+version: '2.3'
+services:
+  flowteur:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 0.0.0.0:5000:5000
+    volumes:
+      - .:/app
+    restart: always
+    tty: true  
+    env_file:
+      - .env

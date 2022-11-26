@@ -3,6 +3,14 @@ import time
 # appent to queue.json file and return the id
 
 # check if file exists and create it if it doesn't
+queuePath = "data/queue.json"
+try:
+    queueFile = open(queuePath, "r")
+    queueFile.close()
+except:
+    queueFile = open(queuePath, "w")
+    queueFile.write("[]")
+    queueFile.close()
 
 
 queuePath = "./data/queue.json"
