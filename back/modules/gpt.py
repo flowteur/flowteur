@@ -1,6 +1,5 @@
 import os
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
-from huggingface_hub import HfApi
 # get env var for token
 huggingface_token = os.environ.get("HUGGINGFACE_TOKEN")
 
