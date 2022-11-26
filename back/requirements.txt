@@ -1,5 +1,6 @@
 flask
 flask-restx
 black
+diffusers
+accelerate
 transformers==4.21.0
-huggingface-hub
