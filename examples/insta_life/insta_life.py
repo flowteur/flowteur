@@ -24,7 +24,6 @@ with open('words.txt', 'r') as f:
     words = f.readlines()
     word = words[random.randint(0, len(words))]
     
-print("Posting image for word: " + word)
 
 def getPrompts(text):
     # encode the text to be sent trough http parameters
@@ -38,12 +37,12 @@ def getImage(text):
     text = urllib.parse.quote(text)
     logging.debug("Getting image for text: " + text)
     response = requests.get(apiUrl + '/api/sd/generate?height=512&width=512&num_inference_steps=17&prompt='+text+'&token='+token)
-    logging.debug("Got response: " + str(response.json()))
+    #logging.debug("Got response: " + str(response.json()))
     return response.json()
 
 def getWorkerStatus(id):
     response = requests.get(apiUrl + '/api/queue?token='+token)
-    logging.debug("Got response: " + str(response.json()))
+    #logging.debug("Got response: " + str(response.json()))
     # for each worker, check if it's the one we're looking for
     response = response.json()
     for worker in response:
