@@ -5,5 +5,5 @@ from diffusers import StableDiffusionPipeline
 huggingface_token = os.environ.get("HUGGINGFACE_TOKEN")
 
 StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", use_auth_token=huggingface_token)
-GPT2Tokenizer.from_pretrained("sberbank-ai/mGPT", use_auth_token=huggingface_token)
-GPT2LMHeadModel.from_pretrained("sberbank-ai/mGPT", use_auth_token=huggingface_token)
+GPT2Tokenizer.from_pretrained("gpt2-large", use_auth_token=huggingface_token)
+GPT2LMHeadModel.from_pretrained("gpt2-large", use_auth_token=huggingface_token)
