@@ -29,7 +29,8 @@ def getPrompts(text):
     # encode the text to be sent trough http parameters
     logging.debug("Getting prompts for text: " + text)
     text = urllib.parse.quote(text)
-    response = requests.get(apiUrl + '/api/gpt/generate?token='+token+'&text='+text)
+    print(apiUrl)
+    response = requests.get(apiUrl + '/api/gpt/generate?token='+token+'&model=gpt2-large&text='+text)
     logging.debug("Got response: " + str(response.json()))
     return response.json()
 

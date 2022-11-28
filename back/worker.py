@@ -33,7 +33,6 @@ while True:
 
     for item in queue:
         logging.info("checking item")
-        print(item)
         #check if status is pending
         if item["status"] == "pending":
             logging.info("item is pending")
@@ -41,7 +40,7 @@ while True:
             if item["type"] == "gpt":
                 logging.info("item is gpt")
                 queueManager.update(item["id"], "processing")
-                text = gpt.generate(item["params"]["text"])
+                text = gpt.generate( item["params"]["model"],item["params"]["text"], item["params"]["min_length"], item["params"]["max_length"], item["params"]["eos_token_id"], item["params"]["pad_token"], item["params"]["top_k"], item["params"]["top_p"], item["params"]["no_repeat_ngram_size"])
                 # save the result to the results folder
                 resultPath = resultsPath + str(item["id"]) + ".txt"
                 resultFile = open(resultPath, "w")

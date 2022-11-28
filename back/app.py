@@ -1,11 +1,12 @@
 from flask import Flask, send_file, request
 from flask_restx import Resource, Api
-import modules.queueManager as queue
-
 import os
 import io
+import modules.queueManager as queue
+
 app = Flask(__name__)
 api = Api(app)
+
 # enable debug mode
 app.config['DEBUG'] = True
 
@@ -15,7 +16,8 @@ ns = api.namespace('Flowteur', description='Flowteur API')
 
 token = os.environ.get("API_TOKEN")
 
-def checkToken(tokenInput):
+
+def checkToken(tokenInput: str):
     if tokenInput == token:
         return True
     else:
@@ -23,13 +25,17 @@ def checkToken(tokenInput):
 
 
 
-@api.route("/api/queue/<resultId>")
-class Queue(Resource):
-    @ns.param('token', 'Auth token')
-    @ns.param('resultId', 'Text to generate image from')
-    def get(self, resultId):
+@api.route("/api/queue/<id>")
+@api.doc(
+    params={
+        'token': 'Auth token',
+        'id': 'Worker ID'
+        }
+)
+class QueueId(Resource):
+    def get(self, id):
         if checkToken(request.args.get("token")):
-            result = queue.read(resultId)
+            result = queue.read(id)
             # check if the result is a string or a byte array
             if isinstance(result, str):
                 # return a json object with the result
@@ -37,27 +43,48 @@ class Queue(Resource):
             elif isinstance(result, bytes):
                 return send_file(io.BytesIO(result), mimetype='image/png')
             
-            return queue.read(resultId)
+            return queue.read(id)
         return {"error": "invalid token"}
     
 
 @api.route("/api/queue")
-class Queue(Resource):
-    @ns.param('token', 'Auth token')
+@api.doc(
+    params={
+        'token': 'Auth token',
+        }
+)
+class checkQueue(Resource):
     def get(self):
         if checkToken(request.args.get("token")):
             if id :
                 return queue.readAll()
         return {"error": "invalid token"}
 
+# add a remover for the queue
+@api.route("/api/queue/remove/<resultId>")
+@api.doc(
+    params={
+        'token': 'Auth token',
+        }
+)
+class delQ(Resource):
+    def get(self, resultId):
+        if checkToken(request.args.get("token")):
+            return queue.remove(int(resultId))
+        return {"error": "invalid token"}
+
 
 @api.route("/api/sd/generate")
+@api.doc(
+    params={
+        'token': 'Auth token',
+        'prompt': 'Prompt text',
+        'num_inference_steps': 'Number of inference steps',
+        'width': 'Image width',
+        'height': 'Image height'
+        }
+)
 class StableDiff(Resource):
-    @ns.param('token', 'Auth token')
-    @ns.param('prompt', 'Text to generate image from')
-    @ns.param('num_inference_steps', 'Number of inference steps')
-    @ns.param('width', 'Width of the image')
-    @ns.param('height', 'Height of the image')
     def get(self):
         if checkToken(request.args.get("token")):
             # add a param with flask_restx
@@ -70,16 +97,39 @@ class StableDiff(Resource):
         return {"error": "invalid token"}
 
 @api.route("/api/gpt/generate")
+@api.doc(
+    params={
+        'token': 'Auth token',
+        'text': 'Text to generate image from',
+        'model': 'Model to use',
+        'min_length': 'Minimum length of the generated text',
+        'max_length': 'Maximum length of the generated text',
+        'eos_token_id': 'End of sentence token id',
+        'pad_token': 'Padding token id',
+        'top_k': 'Top k',
+        'top_p': 'Top p',
+        'no_repeat_ngram_size': 'No repeat ngram size'
+        }
+)
+
 class Gpt(Resource):
-    @ns.doc('generate text ')
-    @ns.param('token', 'Auth token')
-    @ns.param('text', 'Text to generate text from')
     def get(self):
         if checkToken(request.args.get("token")):
             # add a param with flask_restx
-            text = str(request.args.get('text'))
-            return queue.add("gpt", {"text": text}, "pending")
+            model = request.args.get('model') if request.args.get('model') else "gpt2-large"
+            text = request.args.get('text') if request.args.get('text') else "flowers"
+            min_length = request.args.get('min_length') if request.args.get('min_length') else 20
+            max_length = request.args.get('max_length') if request.args.get('max_length') else 80
+            eos_token_id = request.args.get('eos_token_id') if request.args.get('eos_token_id') else 5
+            pad_token = request.args.get('pad_token') if request.args.get('pad_token') else 1
+            top_k = request.args.get('top_k') if request.args.get('top_k') else 10
+            top_p = request.args.get('top_p') if request.args.get('top_p') else 0.7
+            no_repeat_ngram_size = request.args.get('no_repeat_ngram_size') if request.args.get('no_repeat_ngram_size') else 1
+            
+            return queue.add("gpt", {"model": model, "text": text, "min_length": min_length, "max_length": max_length, "eos_token_id": eos_token_id, "pad_token": pad_token, "top_k": top_k, "top_p": top_p, "no_repeat_ngram_size": no_repeat_ngram_size}, "pending")
+
         return {"error": "invalid token"}
+    
 
 
 if __name__ == "__main__":

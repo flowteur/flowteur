@@ -1,11 +1,17 @@
 import json
 import time
+from modules.models import *
+
 # appent to queue.json file and return the id
 
 # check if file exists and create it if it doesn't
 queuePath = "data/queue.json"
 try:
     queueFile = open(queuePath, "r")
+    # check if the file is empty
+    if queueFile.read() == "":
+        queueFile = open(queuePath, "w")
+        queueFile.write("[]")
     queueFile.close()
 except:
     queueFile = open(queuePath, "w")
@@ -15,7 +21,7 @@ except:
 
 queuePath = "./data/queue.json"
 
-def add(type, params, status):
+def add(type: str, params: object, status: str) -> int:
     queueFile = open(queuePath, "r")
     # create and id base on timestamp
     id = int(time.time())
@@ -31,7 +37,7 @@ def add(type, params, status):
 
     return id
 
-def update(id, status):
+def update(id : int, status: str) -> int:
     queueFile = open(queuePath, "r")
     # open queue.json
     # read the queue.json file and return the id
@@ -48,7 +54,24 @@ def update(id, status):
 
     return id
 
-def read(id):
+def remove(id: id) -> int:
+    queueFile = open(queuePath, "r")
+    # open queue.json
+    # read the queue.json file and return the id
+    queue = json.load(queueFile)
+    queueFile.close()
+
+    for item in queue:
+        if item["id"] == int(id):
+            queue.remove(item)
+
+    queueFile = open(queuePath, "w")
+    queueFile.write(json.dumps(queue))
+    queueFile.close()
+
+    return id
+
+def read(id: int) -> object:
     queueFile = open(queuePath, "r")
     # open queue.json
     # read the queue.json file and return the id
