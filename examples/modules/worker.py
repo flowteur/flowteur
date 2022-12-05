@@ -12,16 +12,12 @@ logging.basicConfig(level=logging.DEBUG)
 
 #   Set up Mastodon
 mastodon = Mastodon(
-    access_token = 'token.secret',
+    access_token = os.environ.get('MASTODON_SECRET'),
     api_base_url = os.environ.get("MASTODON_URL")
 )
 
 apiUrl = os.environ.get("API_URL")
 token = os.environ.get("API_TOKEN")
-
-
-apiUrl = "http://localhost:5000"
-token = "autobot3000"
 
 def getPrompts(model="gpt2-large", text="test",min_length=20, max_length=50, no_repeat_ngram_size=1, top_p=0.5):
     # encode the text to be sent trough http parameters
@@ -45,24 +41,25 @@ def getPrompts(model="gpt2-large", text="test",min_length=20, max_length=50, no_
             time.sleep(5)
     
 
-def getImage(text):
+def getImage(text, num_inference_steps=16):
+
     text = urllib.parse.quote(text)
-    logging.debug("Getting image for text: " + text)
-    response = requests.get(apiUrl + '/api/sd/generate?height=512&width=512&num_inference_steps=17&prompt='+text+'&token='+token)
+    print(apiUrl)
+    logging.debug("Getting image for text: ")
+    print(apiUrl + '/api/image/generate?tok')
+    response = requests.get(apiUrl + '/api/sd/generate?height=512&width=512&num_inference_steps='+str(num_inference_steps)+'&prompt='+text+'&token='+token)
     #logging.debug("Got response: " + str(response.json()))
     while True:
         # check if the worker is done
         worker = getWorkerStatus(response.json())
 
         if worker["status"] == "done":
-            # get the result
             result = getWorkerResult(str(response.json()), "image")
-            logging.debug("Got result: " + str(result))
+            logging.debug("Got result: ")
             return result
         else:
             logging.debug("Worker not done yet, waiting 5 seconds")
             time.sleep(5)
-        return response.json()
 
 def getWorkerStatus(id):
     response = requests.get(apiUrl + '/api/queue?token='+token)
@@ -90,8 +87,8 @@ def getWorkerResult(id : int, type: str):
 
 
 def postImage(image, text):
-    logging.debug("Posting image: " + str(image))
-    # post image
+    #logging.debug("Posting image: " + str(image))
+    # post image:
     media = mastodon.media_post(image)
     mastodon.status_post(text, media_ids=media)
     return True
