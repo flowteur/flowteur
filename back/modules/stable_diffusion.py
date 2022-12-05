@@ -5,7 +5,7 @@ from PIL import Image
 # get env var for token
 huggingface_token = os.environ.get("HUGGINGFACE_TOKEN")
 
-model_id = "CompVis/stable-diffusion-v1-4"
+model_id = "modules/yassinbooth"
 
 
 
@@ -17,6 +17,7 @@ def generate(prompt, num_inference_steps=16, width=256, height=256):
     def dummy(images, **kwargs):
         return images, False
     
-    pipe.safety_checker = dummy
+    #pipe.safety_checker = dummy
     image = pipe(str(prompt), num_inference_steps=int(num_inference_steps), width=int(width), height=int(height)).images[0]
     return image
+
