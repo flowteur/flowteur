@@ -1,0 +1,62 @@
+{
+    "name": "Flowteur",
+    "description" : "API with gpt2 and stable diffusion models",
+    "actions": [
+        {
+            "name": "Generate Text",
+            "description": "Generate text with gpt2 and stable diffusion models",
+            "route": "/api/gpt/generate",
+            "queryParameters": "url",
+            "inputs": [
+                {
+                    "name": "text",
+                    "description": "Text to start the generation",
+                    "type": "string"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "text",
+                    "description": "Generated text",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Generate Image",
+            "description": "Generate image with stable diffusion",
+            "inputs": [
+                {
+                    "name": "prompt",
+                    "description": "Text to start the generation",
+                    "type": "string"
+                },
+                {
+                    "name": "width",
+                    "description": "Size of the generated image",
+                    "type": "string"
+                    
+                },
+                {
+                    "name": "height",
+                    "description": "Size of the generated image",
+                    "type": "string"
+                },
+                {
+                    "name": "num_inference_steps",
+                    "description": "Number of steps for the generation",
+                    "type": "string"
+                }
+
+            ],
+            "outputs": [
+                {
+                    "name": "image",
+                    "description": "Generated image",
+                    "type": "image"
+                }
+            ]
+        }
+    ]       
+
+}

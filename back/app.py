@@ -2,6 +2,7 @@ from flask import Flask, send_file, request
 from flask_restx import Resource, Api
 import os
 import io
+import json
 import modules.queueManager as queue
 
 app = Flask(__name__)
@@ -23,6 +24,30 @@ def checkToken(tokenInput: str):
     else:
         return False
 
+
+# add a rout named api/entrypoint who returns a json of file apiEntrypoint.json
+@api.route("/api/entrypoint")
+@api.doc(
+    params={
+        'token': 'Auth token',
+        }
+)
+class EntryPoint(Resource):
+    def get(self):
+        if checkToken(request.args.get("token")):
+            # open the file
+            apiEntrypointFile = open("apiEntrypoint.json", "r")
+            # read the file as a json
+            apiEntrypoint = json.load(apiEntrypointFile)
+            # close the file
+            apiEntrypointFile.close()
+            # return the json
+            return apiEntrypoint
+            
+            
+            
+            
+        return {"error": "invalid token"}
 
 
 @api.route("/api/queue/<id>")
