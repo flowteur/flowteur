@@ -23,8 +23,6 @@ def saveImage(image, id):
     image.save(resultPath)
 
 
-
-
 while True:
     # open queue.json
     queueFile = open(queuePath, "r")
@@ -40,25 +38,35 @@ while True:
             if item["type"] == "gpt":
                 logging.info("item is gpt")
                 queueManager.update(item["id"], "processing")
-                text = gpt.generate( item["params"]["model"],item["params"]["text"], item["params"]["min_length"], item["params"]["max_length"], item["params"]["eos_token_id"], item["params"]["pad_token"], item["params"]["top_k"], item["params"]["top_p"], item["params"]["no_repeat_ngram_size"])
-                # save the result to the results folder
-                resultPath = resultsPath + str(item["id"]) + ".txt"
-                resultFile = open(resultPath, "w")
-                resultFile.write(text)
-                resultFile.close()
-                logging.info("gpt done")
-                queueManager.update(item["id"], "done")
+                try :
+                    text = gpt.generate( item["params"]["model"],item["params"]["text"], item["params"]["min_length"], item["params"]["max_length"], item["params"]["eos_token_id"], item["params"]["pad_token"], item["params"]["top_k"], item["params"]["top_p"], item["params"]["no_repeat_ngram_size"])
+                    # save the result to the results folder
+                    resultPath = resultsPath + str(item["id"]) + ".txt"
+                    resultFile = open(resultPath, "w")
+                    resultFile.write(text)
+                    resultFile.close()
+                    logging.info("gpt done")
+                    queueManager.update(item["id"], "done")
+                except(Exception):
+                    print("error", Exception)
+                    queueManager.update(item["id"], "error")
                 
                 
             elif item["type"] == "sd":
                 logging.info("item is sd")
                 queueManager.update(item["id"], "processing")
-                image = sd.generate(item["params"]["prompt"], item["params"]["num_inference_steps"], item["params"]["width"], item["params"]["height"])
-                # save the result to the results folder
-                resultPath = resultsPath + str(item["id"]) + ".png"
-                saveImage(image, item["id"])
-                logging.info("sd done")
-                queueManager.update(item["id"], "done")
+                try:
+                    image = sd.generate(item["params"]["prompt"], item["params"]["num_inference_steps"], item["params"]["width"], item["params"]["height"])
+                    # save the result to the results folder
+                    resultPath = resultsPath + str(item["id"]) + ".png"
+                    saveImage(image, item["id"])
+                    logging.info("sd done")
+                    queueManager.update(item["id"], "done")
+                except(Exception):
+                    print("error", Exception)
+                    queueManager.update(item["id"], "error")
+                    
+
                 
     logging.info("sleeping")
     print("sleeping")
