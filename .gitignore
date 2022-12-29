@@ -3,6 +3,7 @@ __pycache__
 *.log
 .env
 back/static
+queue.json
 *.png
 *.logs
 token.secret
