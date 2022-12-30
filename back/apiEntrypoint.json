@@ -11,7 +11,8 @@
                 {
                     "name": "text",
                     "description": "Text to start the generation",
-                    "type": "string"
+                    "type": "string",
+                    "default": "The quick brown fox jumps over the lazy dog"
                 }
             ],
             "outputs": [
@@ -29,23 +30,27 @@
                 {
                     "name": "prompt",
                     "description": "Text to start the generation",
-                    "type": "string"
+                    "type": "string",
+                    "default": "The quick brown fox jumps over the lazy dog"
                 },
                 {
                     "name": "width",
                     "description": "Size of the generated image",
-                    "type": "string"
+                    "type": "string",
+                    "default": "512"
                     
                 },
                 {
                     "name": "height",
                     "description": "Size of the generated image",
-                    "type": "string"
+                    "type": "string",
+                    "default": "512"
                 },
                 {
                     "name": "num_inference_steps",
                     "description": "Number of steps for the generation",
-                    "type": "string"
+                    "type": "string",
+                    "default": "20"
                 }
 
             ],

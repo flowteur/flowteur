@@ -1,5 +1,6 @@
 from flask import Flask, send_file, request
 from flask_restx import Resource, Api
+from flask_cors import CORS
 import os
 import io
 import json
@@ -7,6 +8,7 @@ import modules.queueManager as queue
 
 app = Flask(__name__)
 api = Api(app)
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # enable debug mode
 app.config['DEBUG'] = True
